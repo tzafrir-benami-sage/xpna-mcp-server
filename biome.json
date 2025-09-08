@@ -1,0 +1,47 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.2.3/schema.json",
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 120,
+    "attributePosition": "auto",
+    "includes": [
+      "**",
+      "!**/node_modules/**",
+      "!**/dist/**/*",
+      "!**/.git/**/*",
+      "!**/.vscode/**/*",
+      "!**/.idea/**/*"
+    ]
+  },
+  "assist": { "actions": { "source": { "organizeImports": "off" } } },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "style": {
+        "noParameterAssign": "error",
+        "useAsConstAssertion": "error",
+        "useDefaultParameterLast": "error",
+        "useEnumInitializers": "error",
+        "useSelfClosingElements": "error",
+        "useSingleVarDeclarator": "error",
+        "useNumberNamespace": "error",
+        "noInferrableTypes": "error",
+        "noUselessElse": "error"
+      }
+    },
+    "includes": [
+      "**",
+      "!**/node_modules/**",
+      "!**/dist/**",
+      "!**/.idea/**",
+      "!**/.vscode/**",
+      "!**/.DS_Store",
+      "!**/*.js"
+    ]
+  }
+}

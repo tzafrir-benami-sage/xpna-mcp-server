@@ -83,7 +83,7 @@ export const createPlanFromBudget = async ({
 }) => {
   const url = "https://api.intacct-planning.com/v1/create-plan-budget";
 
-  const response = await fetch(url, {
+  return await fetch(url, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
@@ -92,12 +92,6 @@ export const createPlanFromBudget = async ({
     body: JSON.stringify({ name, description, budgetKey, dimensionsIds } satisfies CreatePlanBudgetRequestBody),
     method: "POST",
   });
-
-  if (!response.ok) {
-    throw new Error(`Error creating plan from budget: ${response.statusText}`);
-  }
-
-  return response;
 };
 
 export const createPlanFromActuals = async (

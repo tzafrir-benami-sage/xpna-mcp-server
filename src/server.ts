@@ -171,19 +171,42 @@ server.registerTool(
     },
   },
   async ({ name, description, budgetKey }: { name: string; description: string; budgetKey: string }) => {
+    try{
     const response = await createPlanFromBudget({ name, description, budgetKey });
-    const jobId = await response.text();
     const requestId = response.headers.get("x-xpna-request-id") as string;
+    if (!response.ok) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error creating plan from budget: ${response.status} ${response.statusText}. Newrelic requestId: ${requestId}.`,
+            mimeType: "text/plain",
+          },
+        ],
+      }
+    }
+    const jobId = await response.text();
     return {
       content: [
         {
           type: "text",
-          text: `Initiated create plan form SIF budget ${budgetKey} with name ${name}. jobId: ${jobId}. requestId: ${requestId}`,
+          text: `Initiated create plan form SIF budget ${budgetKey} with name ${name}. jobId: ${jobId}. Newrelic requestId: ${requestId}`,
           mimeType: "text/plain"
         },
       ],
     };
-  },
+    }catch (e) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error thrown while creating plan from budget: ${e}`,
+            mimeType: "text/plain",
+          },
+        ],
+      }
+    }
+  }
 );
 
 server.registerTool(

@@ -158,7 +158,7 @@ server.registerTool(
     },
   },
   async ({ name, description, budgetKey }: {name:string, description:string, budgetKey:string}) => {
-    const jobId = await createPlanFromBudget({ name, description, budgetKey,  });
+    const jobId = await createPlanFromBudget({ name, description, budgetKey });
     return {
       content: [{
         type: "text",
@@ -168,7 +168,6 @@ server.registerTool(
     };
   },
 );
-
 
 // Start receiving messages on stdin and sending messages on stdout
 async function main() {

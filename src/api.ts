@@ -75,7 +75,7 @@ export const shareVersionWithUser = async (userId: string, versionId: string): P
 export const createPlanFromBudget = async ({
   budgetKey,
   name,
-  description = '',
+  description = `Plan created from SIF Budget ${budgetKey} at ${new Date().toLocaleString()}`,
 }: {
   budgetKey: string;
   name: string;

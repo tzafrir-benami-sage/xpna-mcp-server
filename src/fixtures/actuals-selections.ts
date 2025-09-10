@@ -1,7 +1,4 @@
 export const planData = {
-
-    name: 'innoTest',
-    description: '',
     reportingPeriods: [
       {
         key: '383',
@@ -65,6 +62,7 @@ export const planData = {
       },
     ],
     dimensionsIds: ['location', 'project', 'department'],
+    dimensionFilters: {},
     accountsStructure: [
       {
         accounts: [
@@ -366,8 +364,4 @@ export const planData = {
       },
     ],
     entitiesIds: ['100', '200', '300', '400', '500', '900', '910', '920'],
-    dimensionFilters: {},
-    workforce: {
-      enabled: false,
-    },
 };

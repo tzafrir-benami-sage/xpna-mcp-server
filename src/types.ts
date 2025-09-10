@@ -5,11 +5,14 @@ export type CreatePlanBudgetRequestBody = {
   dimensionsIds: string[];
 };
 
-export type AccountsStructure = { accounts: {
+export type AccountsStructure = {
+  accounts: {
     id: string;
     href: string;
     key: string;
-}[]; dimensions: string[] }
+  }[];
+  dimensions: string[];
+};
 
 export type CreatePlanActualsRequestBody = {
   name: string;
@@ -24,14 +27,14 @@ export type CreatePlanActualsRequestBody = {
   accountsStructure: AccountsStructure[];
   statisticalAccountsStructure: AccountsStructure[];
   populateData: {
-  source: 'actuals' | 'budget';
-  reportingPeriods: {
-    id: string;
-    href: string;
-    key: string;
+    source: "actuals" | "budget";
+    reportingPeriods: {
+      id: string;
+      href: string;
+      key: string;
+    }[];
+    periodsMap: Record<string, string>;
   }[];
-  periodsMap: Record<string, string>;
-}[];
 };
 
 export type JobStatus = { total: number; progress: number; error?: boolean };

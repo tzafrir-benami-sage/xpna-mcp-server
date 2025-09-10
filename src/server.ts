@@ -171,31 +171,31 @@ server.registerTool(
     },
   },
   async ({ name, description, budgetKey }: { name: string; description: string; budgetKey: string }) => {
-    try{
-    const response = await createPlanFromBudget({ name, description, budgetKey });
-    const requestId = response.headers.get("x-xpna-request-id") as string;
-    if (!response.ok) {
+    try {
+      const response = await createPlanFromBudget({ name, description, budgetKey });
+      const requestId = response.headers.get("x-xpna-request-id") as string;
+      if (!response.ok) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `Error creating plan from budget: ${response.status} ${response.statusText}. Newrelic requestId: ${requestId}.`,
+              mimeType: "text/plain",
+            },
+          ],
+        };
+      }
+      const jobId = await response.text();
       return {
         content: [
           {
             type: "text",
-            text: `Error creating plan from budget: ${response.status} ${response.statusText}. Newrelic requestId: ${requestId}.`,
+            text: `Initiated create plan form SIF budget ${budgetKey} with name ${name}. jobId: ${jobId}. Newrelic requestId: ${requestId}`,
             mimeType: "text/plain",
           },
         ],
-      }
-    }
-    const jobId = await response.text();
-    return {
-      content: [
-        {
-          type: "text",
-          text: `Initiated create plan form SIF budget ${budgetKey} with name ${name}. jobId: ${jobId}. Newrelic requestId: ${requestId}`,
-          mimeType: "text/plain"
-        },
-      ],
-    };
-    }catch (e) {
+      };
+    } catch (e) {
       return {
         content: [
           {
@@ -204,9 +204,9 @@ server.registerTool(
             mimeType: "text/plain",
           },
         ],
-      }
+      };
     }
-  }
+  },
 );
 
 server.registerTool(
@@ -240,12 +240,11 @@ server.registerTool(
     inputSchema: {
       name: z.string().min(1),
       description: z.string().min(1),
-      planData: z.record(z.any()),
     },
   },
-  async () => {
+  async ({ name, description }) => {
     //planData comes for a fixture file
-    const jobId = await createPlanFromActuals(planData);
+    const jobId = await createPlanFromActuals({ ...planData, name, description });
     return {
       content: [
         {

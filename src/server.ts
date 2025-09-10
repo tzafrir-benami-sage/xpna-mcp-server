@@ -88,7 +88,7 @@ server.registerTool(
     await shareVersionWithUser(userId, planId);
     return {
       content: [{ 
-        type: "text", 
+        type: "text",
         text: `Shared plan ${planId} with user ${userId}`, 
         mimeType: "text/plain"
       }],
@@ -116,7 +116,6 @@ server.registerTool(
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.log('MCP server running on stdio');
 }
 
 main().catch((error) => {

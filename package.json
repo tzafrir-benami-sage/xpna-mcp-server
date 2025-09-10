@@ -15,6 +15,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.2.3",
     "@modelcontextprotocol/inspector": "^0.16.6",
-    "tsx": "^4.20.5"
+    "tsx": "^4.20.5",
+    "typescript": "^5.9.2"
   }
 }

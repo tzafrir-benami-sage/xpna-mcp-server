@@ -5,4 +5,11 @@ export type CreatePlanBudgetRequestBody = {
   dimensionsIds: string[];
 };
 
+export type CreatePlanActualsRequestBody = {
+  name: string;
+  description: string;
+  planData: Record<string, any>;
+  dimensionsIds: string[];
+};
+
 export type JobStatus = { total: number; progress: number; error?: boolean };

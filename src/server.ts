@@ -1,8 +1,9 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import {createPlanFromBudget, getJobStatus, getSharedVersions, getUsers, shareVersionWithUser} from "./api.js";
+import {createPlanFromBudget, createPlanFromActuals, getJobStatus, getSharedVersions, getUsers, shareVersionWithUser} from "./api.js";
 import {budgets} from "./data.js";
+import { planData } from "./fixtures/actuals-selections.js";
 
 // Create an MCP server
 const server = new McpServer({
@@ -194,98 +195,25 @@ server.registerTool(
 server.registerTool(
   "create-plan-actuals",
   {
-    title: "Create Plan Actuals",
-    description: "Creates a plan with actuals in Intacct Planning",
+    title: "Create an xPnA plan from actuals",
+    description: "Create a new plan in xPnA based on actuals",
     inputSchema: {
-      accessToken: z.string().min(1),
-      xCompanyId: z.string().min(1),
-      planData: z.any(),
+      name: z.string().min(1),
+      description: z.string().min(1),
+      planData: z.record(z.any())
     },
   },
-  async ({ accessToken, xCompanyId, planData }) => {
-    try {
-      const jobResponse = await fetch('https://api.intacct-planning.com/v1/create-plan-actuals', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-          'x-xpna-company-id': xCompanyId,
-        },
-        body: JSON.stringify(planData),
-      });
-
-      if (!jobResponse.ok) {
-        throw new Error(`Failed to submit job: ${jobResponse.statusText}`);
-      }
-
-      const jobId = await jobResponse.text();
-
-      const pollJob = async (): Promise<any> => {
-        const statusResponse = await fetch(`https://api.intacct-planning.com/v1/job/${jobId}`, {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${accessToken}`,
-            'x-xpna-company-id': xCompanyId,
-          },
-        });
-
-        if (!statusResponse.ok) {
-          throw new Error(`Failed to get job status: ${statusResponse.statusText}`);
-        }
-
-        return await statusResponse.json();
-      };
-
-      let jobStatus = await pollJob();
-      let progress = 0;
-      const maxAttempts = 60;
-      let attempts = 0;
-
-      while (jobStatus.progress < jobStatus.total && attempts < maxAttempts) {
-        await new Promise(resolve => setTimeout(resolve, 10000)); // 10 second interval
-        jobStatus = await pollJob();
-        progress = Math.round((jobStatus.progress / jobStatus.total) * 100);
-        attempts++;
-
-        if (jobStatus.error) {
-          throw new Error(`Job failed: ${jobStatus.error}`);
-        }
-      }
-
-      if (attempts >= maxAttempts) {
-        throw new Error('Job timed out after 10 minutes');
-      }
-
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              success: true,
-              jobId,
-              finalStatus: jobStatus,
-              message: `Plan "${planData.name}" created successfully`,
-              progress: 100,
-            }, null, 2),
-          },
-        ],
-      };
-
-    } catch (error) {
-      return {
-        content: [
-          {
-            type: 'text',
-            text: JSON.stringify({
-              success: false,
-              error: error instanceof Error ? error.message : 'Unknown error occurred',
-            }, null, 2),
-          },
-        ],
-        isError: true,
-      };
-    }
-  }
+  async ({ name, description }: {name:string, description:string}) => {
+    //planData comes for a fixture file
+    const jobId = await createPlanFromActuals({ name, description, planData });
+    return {
+      content: [{
+        type: "text",
+        text: `Initiated create plan form actuals. jobId to poll status: ${jobId}`,
+        mimeType: "text/plain"
+      }],
+    };
+  },
 );
 
 

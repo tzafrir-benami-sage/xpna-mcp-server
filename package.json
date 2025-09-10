@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --build",
-    "start:mcp": "tsx src/server.ts",
+    "start:mcp": "npm run build && tsx src/server.ts",
     "start:inspect": "set DANGEROUSLY_OMIT_AUTH=true && npx @modelcontextprotocol/inspector tsx src/server.ts"
   },
   "dependencies": {

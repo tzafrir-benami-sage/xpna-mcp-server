@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "xpna-demo-mcp": {
+      "command": "node",
+      "args": ["/Users/tzafrirbenami/Documents/work/mcp/dist/server.js"],
+      "env": {
+        "NODE_ENV": "development"
+      }
+    }
+  }
+}

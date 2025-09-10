@@ -7,7 +7,6 @@ export type CreatePlanBudgetRequestBody = {
 
 export type AccountsStructure = { accounts: {
     id: string;
-    name: string
     href: string;
     key: string;
 }[]; dimensions: string[] }
@@ -17,7 +16,6 @@ export type CreatePlanActualsRequestBody = {
   description: string;
   reportingPeriods: {
     id: string;
-    name: string;
     href: string;
     key: string;
   }[];
@@ -29,7 +27,6 @@ export type CreatePlanActualsRequestBody = {
   source: 'actuals' | 'budget';
   reportingPeriods: {
     id: string;
-    name: string;
     href: string;
     key: string;
   }[];

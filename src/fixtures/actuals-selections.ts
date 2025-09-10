@@ -1,5 +1,5 @@
 export const planData = {
-  actualsBudgetDetails: {
+
     name: 'innoTest',
     description: '',
     reportingPeriods: [
@@ -285,8 +285,8 @@ export const planData = {
       },
     ],
     populateData: [
-      {
-        source: 'actuals',
+        {
+          source: "actuals" as const,
         reportingPeriods: [
           {
             key: '407',
@@ -370,5 +370,4 @@ export const planData = {
     workforce: {
       enabled: false,
     },
-  },
 };

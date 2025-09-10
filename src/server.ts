@@ -171,13 +171,15 @@ server.registerTool(
     },
   },
   async ({ name, description, budgetKey }: { name: string; description: string; budgetKey: string }) => {
-    const jobId = await createPlanFromBudget({ name, description, budgetKey });
+    const response = await createPlanFromBudget({ name, description, budgetKey });
+    const jobId = await response.text();
+    const requestId = response.headers.get("x-xpna-request-id") as string;
     return {
       content: [
         {
           type: "text",
-          text: `Initiated create plan form SIF budget ${budgetKey} with name ${name}. jobId: ${jobId}`,
-          mimeType: "text/plain",
+          text: `Initiated create plan form SIF budget ${budgetKey} with name ${name}. jobId: ${jobId}. requestId: ${requestId}`,
+          mimeType: "text/plain"
         },
       ],
     };

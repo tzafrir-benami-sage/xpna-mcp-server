@@ -1,6 +1,6 @@
 import { dimensionsIds } from "./data.js";
 import type {CreatePlanActualsRequestBody, CreatePlanBudgetRequestBody, JobStatus} from "./types.js";
-  
+
 const xCompanyId = "Zjc1YzBjMWQtZTM5MS00ZGI1LThhMGUtMDkyMjA1ZTg4ZGQ5";
 const accessToken =
   "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ik56TXdPVVJHTVVZNU5ERXpRelJHUVVNMVF6azJSa1U1UVRJMU0wRTROemhGUmpWQ04wSTNOQSJ9.eyJodHRwczovL3NhZ2UuY29tL3NjaS9pZHAiOiJJbnRhY2N0IiwiaXNzIjoiaHR0cHM6Ly9pZC5zYWdlLmNvbS8iLCJzdWIiOiJhdXRoMHxlMGZhZjhhYmQ5NmI0MmU3ZDZhZjc4MjY5OWJkMjQ3OTM0YjY2MTQ1MWQ0NjgzYTUiLCJhdWQiOlsieHBuYS94cG5hIiwiaHR0cHM6Ly9zYWdlLWNpZC1wcm9kLnNhZ2VpZHByb2QuYXV0aDBhcHAuY29tL3VzZXJpbmZvIl0sImlhdCI6MTc1NzUwMzY3OSwiZXhwIjoxNzU3NTMyNDc5LCJzY29wZSI6Im9wZW5pZCBwcm9maWxlIGVtYWlsIiwiYXpwIjoiODVXWEIxZ1lYeW5IREVHaXp5V25QVmVCaERXam1zRWQifQ.gkUooX7wjTKZn8e8U2RlesZw3j784JFp-MnYkw8dl2kCGsrv_1S7TDyy1RYDI-s7TaY1Hp0Ch56BUSnamVH0IUGmuZClWUszXWTDVzagWKysUiMh9EZGcFFl7GB6ulWXaKDJzfX2Pe-srpy1hrrFeo0Kl1FL5v8iKfhcunTHryYU54JgY-xzMQ8LgduNRj256wPcddfM53sH3KVxwBUeRod_7Bl3-xvzet_Kqnb09unoSwvfYAfL1-MGeZgyKJRSz4mrjRGia6HWbg0KENymT5RNFAtuiIaCLSp4i1pEEsuqK0Wo0QjnFxKEaxdHOjo4XCW40NWz4rAqDfyVaTxuuQ";
@@ -96,9 +96,8 @@ export const createPlanFromBudget = async ({
   if (!response.ok) {
     throw new Error(`Error creating plan from budget: ${response.statusText}`);
   }
-  const jobId = await response.text();
 
-  return jobId;
+  return response;
 };
 
 export const createPlanFromActuals = async (

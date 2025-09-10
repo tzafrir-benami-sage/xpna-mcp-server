@@ -2,6 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { getSharedVersions, getUsers, shareVersionWithUser } from "./api.js";
+import {budgets} from "./data.js";
 
 // Create an MCP server
 const server = new McpServer({
@@ -59,6 +60,39 @@ server.registerResource(
           {
             uri: uri.href,
             text: JSON.stringify(users),
+            mimeType: "application/json",
+          },
+        ],
+      };
+    } catch (error) {
+      return {
+        contents: [
+          {
+            uri: uri.href,
+            text: JSON.stringify({ error: (error as Error).message }),
+            mimeType: "application/json",
+          },
+        ],
+      };
+    }
+  },
+);
+
+server.registerResource(
+  "budgets",
+  "mcp://xpna-demo/budgets",
+  {
+    title: "Budgets",
+    description: "Get list of SIF budgets in the account",
+    mimeType: "application/json",
+  },
+  async (uri) => {
+    try {
+      return {
+        contents: [
+          {
+            uri: uri.href,
+            text: JSON.stringify(budgets),
             mimeType: "application/json",
           },
         ],

@@ -4,3 +4,5 @@ export type CreatePlanBudgetRequestBody = {
   budgetKey: string;
   dimensionsIds: string[];
 };
+
+export type JobStatus = { total: number; progress: number; error?: boolean };

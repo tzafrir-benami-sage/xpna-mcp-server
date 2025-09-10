@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import {createPlanFromBudget, getSharedVersions, getUsers, shareVersionWithUser} from "./api.js";
+import {createPlanFromBudget, getJobStatus, getSharedVersions, getUsers, shareVersionWithUser} from "./api.js";
 import {budgets} from "./data.js";
 
 // Create an MCP server
@@ -162,7 +162,29 @@ server.registerTool(
     return {
       content: [{
         type: "text",
-        text: `Initiated create plan form SIF budget ${budgetKey} with name ${name}. jobId to poll status: ${jobId.jobId}`,
+        text: `Initiated create plan form SIF budget ${budgetKey} with name ${name}. jobId to poll status: ${jobId}`,
+        mimeType: "text/plain"
+      }],
+    };
+  },
+);
+
+
+server.registerTool(
+  "poll-job-status",
+  {
+    title: "Poll job status",
+    description: "Poll the status of a long-running job until completion",
+    inputSchema: {
+      jobId: z.string().min(1) ,
+    },
+  },
+  async ({ jobId }: {jobId:string}) => {
+    const status = await getJobStatus(jobId);
+    return {
+      content: [{
+        type: "text",
+        text: `jobId ${jobId}, status: ${JSON.stringify(status)}`,
         mimeType: "text/plain"
       }],
     };

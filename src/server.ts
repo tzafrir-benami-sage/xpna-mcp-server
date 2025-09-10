@@ -205,7 +205,7 @@ server.registerTool(
   },
   async ({ name, description }: {name:string, description:string}) => {
     //planData comes for a fixture file
-    const jobId = await createPlanFromActuals({ name, description, planData });
+    const jobId = await createPlanFromActuals({ planData });
     return {
       content: [{
         type: "text",

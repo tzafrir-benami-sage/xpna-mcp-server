@@ -103,12 +103,8 @@ export const createPlanFromBudget = async ({
 
 export const createPlanFromActuals = async ({
   planData,
-  name,
-  description = `Plan created from actuals at ${new Date().toLocaleString()}`,
 }: {
   planData: Record<string, any>; // Replace 'any' with the actual type if known, e.g. PlanDataType[]
-  name: string;
-  description: string;
 }) => {
   const url = "https://api.intacct-planning.com/v1/create-plan-actuals";
 
@@ -118,12 +114,12 @@ export const createPlanFromActuals = async ({
       Authorization: `Bearer ${accessToken}`,
       "x-xpna-company-id": xCompanyId,
     },
-    body: JSON.stringify({ name, description, planData, dimensionsIds } satisfies CreatePlanActualsRequestBody),
+    body: JSON.stringify({  planData } satisfies CreatePlanActualsRequestBody),
     method: "POST",
   });
 
   if (!response.ok) {
-    throw new Error(`Error creating plan from budget: ${response.statusText}`);
+    throw new Error(`Error creating plan from actuals: ${response.statusText}`);
   }
   const jobId = await response.text();
 

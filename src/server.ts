@@ -1,8 +1,15 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import {createPlanFromBudget, createPlanFromActuals, getJobStatus, getSharedVersions, getUsers, shareVersionWithUser} from "./api.js";
-import {budgets} from "./data.js";
+import {
+  createPlanFromBudget,
+  createPlanFromActuals,
+  getJobStatus,
+  getSharedVersions,
+  getUsers,
+  shareVersionWithUser,
+} from "./api.js";
+import { budgets } from "./data.js";
 import { planData } from "./fixtures/actuals-selections.js";
 
 // Create an MCP server
@@ -20,30 +27,31 @@ server.registerResource(
     description: "Get list of plans in the account",
     mimeType: "application/json",
   },
-  async (uri:{href:string}) => {
+  async (uri: { href: string }) => {
     try {
-    const versions = await getSharedVersions();
-    return {
-      contents: [
-        {
-          uri: uri.href,
-          text: JSON.stringify(versions),
-          mimeType: "application/json",
-        },
-      ],
-    };
-  } catch (error) {
-    return {
-      contents: [
-        {
-          uri: uri.href,
-          text: JSON.stringify({ error: (error as Error).message }),
-          mimeType: "application/json",
-        },
-      ],
-    };
-  }
-});
+      const versions = await getSharedVersions();
+      return {
+        contents: [
+          {
+            uri: uri.href,
+            text: JSON.stringify(versions),
+            mimeType: "application/json",
+          },
+        ],
+      };
+    } catch (error) {
+      return {
+        contents: [
+          {
+            uri: uri.href,
+            text: JSON.stringify({ error: (error as Error).message }),
+            mimeType: "application/json",
+          },
+        ],
+      };
+    }
+  },
+);
 
 server.registerResource(
   "users",
@@ -53,7 +61,7 @@ server.registerResource(
     description: "Get list of users in the account",
     mimeType: "application/json",
   },
-  async (uri:{href:string}) => {
+  async (uri: { href: string }) => {
     try {
       const users = await getUsers();
       return {
@@ -87,7 +95,7 @@ server.registerResource(
     description: "Get list of SIF budgets in the account",
     mimeType: "application/json",
   },
-  async (uri:{href:string}) => {
+  async (uri: { href: string }) => {
     try {
       return {
         contents: [
@@ -119,14 +127,16 @@ server.registerTool(
     description: "Share a specific plan with a user",
     inputSchema: { userId: z.string().min(1), planId: z.string().min(1) },
   },
-  async ({ userId, planId }:{planId:string; userId:string}) => {
+  async ({ userId, planId }: { planId: string; userId: string }) => {
     await shareVersionWithUser(userId, planId);
     return {
-      content: [{ 
-        type: "text",
-        text: `Shared plan ${planId} with user ${userId}`, 
-        mimeType: "text/plain"
-      }],
+      content: [
+        {
+          type: "text",
+          text: `Shared plan ${planId} with user ${userId}`,
+          mimeType: "text/plain",
+        },
+      ],
     };
   },
 );
@@ -138,13 +148,15 @@ server.registerTool(
     description: "Returns the URL of a specific plan to open in the browser",
     inputSchema: { planId: z.string().min(1) },
   },
-  async ({ planId }: {planId:string}) => ({
-    content: [{
-      type: "text",
-      text: `https://latest.intacct-planning.com/plan/${planId}`,
-      "mimeType": "text/html"
-    }]
-  })
+  async ({ planId }: { planId: string }) => ({
+    content: [
+      {
+        type: "text",
+        text: `https://latest.intacct-planning.com/plan/${planId}`,
+        mimeType: "text/html",
+      },
+    ],
+  }),
 );
 
 server.registerTool(
@@ -153,23 +165,24 @@ server.registerTool(
     title: "Create an xPnA plan from a SIF Budget",
     description: "Create a new plan in xPnA based on a selected SIF Budget",
     inputSchema: {
-      name: z.string().min(1) ,
+      name: z.string().min(1),
       description: z.string().min(1),
-      budgetKey: z.string().min(1)
+      budgetKey: z.string().min(1),
     },
   },
-  async ({ name, description, budgetKey }: {name:string, description:string, budgetKey:string}) => {
+  async ({ name, description, budgetKey }: { name: string; description: string; budgetKey: string }) => {
     const jobId = await createPlanFromBudget({ name, description, budgetKey });
     return {
-      content: [{
-        type: "text",
-        text: `Initiated create plan form SIF budget ${budgetKey} with name ${name}. jobId: ${jobId}`,
-        mimeType: "text/plain"
-      }],
+      content: [
+        {
+          type: "text",
+          text: `Initiated create plan form SIF budget ${budgetKey} with name ${name}. jobId: ${jobId}`,
+          mimeType: "text/plain",
+        },
+      ],
     };
   },
 );
-
 
 server.registerTool(
   "poll-job-status",
@@ -177,17 +190,19 @@ server.registerTool(
     title: "Poll job status",
     description: "Poll the status of a long-running job until completion",
     inputSchema: {
-      jobId: z.string().min(1) ,
+      jobId: z.string().min(1),
     },
   },
-  async ({ jobId }: {jobId:string}) => {
+  async ({ jobId }: { jobId: string }) => {
     const status = await getJobStatus(jobId);
     return {
-      content: [{
-        type: "text",
-        text: `jobId ${jobId}, status: ${JSON.stringify(status)}`,
-        mimeType: "text/plain"
-      }],
+      content: [
+        {
+          type: "text",
+          text: `jobId ${jobId}, status: ${JSON.stringify(status)}`,
+          mimeType: "text/plain",
+        },
+      ],
     };
   },
 );
@@ -200,22 +215,23 @@ server.registerTool(
     inputSchema: {
       name: z.string().min(1),
       description: z.string().min(1),
-      planData: z.record(z.any())
+      planData: z.record(z.any()),
     },
   },
   async ({ name, description }: {name:string, description:string}) => {
     //planData comes for a fixture file
     const jobId = await createPlanFromActuals({ planData });
     return {
-      content: [{
-        type: "text",
-        text: `Initiated create plan form actuals. jobId to poll status: ${jobId}`,
-        mimeType: "text/plain"
-      }],
+      content: [
+        {
+          type: "text",
+          text: `Initiated create plan form actuals. jobId to poll status: ${jobId}`,
+          mimeType: "text/plain",
+        },
+      ],
     };
   },
 );
-
 
 // Start receiving messages on stdin and sending messages on stdout
 async function main() {
@@ -224,6 +240,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error('Server failed to start:', error);
+  console.error("Server failed to start:", error);
   process.exit(1);
 });

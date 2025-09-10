@@ -117,8 +117,6 @@ export const createPlanFromActuals = async (
   return jobId;
 };
 
-
-
 export const getJobStatus = async (jobId: string) => {
   const url = `https://api.intacct-planning.com/v1/job/${jobId}`;
   const response = await fetch(url, {
@@ -130,12 +128,21 @@ export const getJobStatus = async (jobId: string) => {
     }
   });
 
-
   if (!response.ok) {
     throw new Error(`Error fetching job: ${response.statusText}`);
   }
-  const status = await response.json() as JobStatus;
 
-  return status;
-
+  return await response.json() as JobStatus;
 }
+
+export const getTest = async () => {
+  const url = "https://api.intacct-planning.com/v1/some-test-endpoint";
+  return await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+      "x-xpna-company-id": xCompanyId,
+    },
+  });
+};

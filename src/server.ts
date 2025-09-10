@@ -8,6 +8,7 @@ import {
   getSharedVersions,
   getUsers,
   shareVersionWithUser,
+  getTest,
 } from "./api.js";
 import { budgets } from "./data.js";
 import { planData } from "./fixtures/actuals-selections.js";
@@ -256,6 +257,51 @@ server.registerTool(
     };
   },
 );
+
+server.registerTool(
+  "showcase-supportability",
+  {
+    title: "Showcase",
+    description: "Showcase supportability tool. On any error x-xpna-request-id header can be used to search the logs.",
+  },
+  async () => {
+    try {
+      const response = await getTest();
+      const requestId = response.headers.get("x-xpna-request-id") as string;
+      if(!response.ok) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `request failed: ${response.status} ${response.statusText}. Search the logs using requestId: ${requestId}.`,
+              mimeType: "text/plain",
+            },
+          ],
+        };
+      }
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(await response.json()),
+            mimeType: "text/plain",
+          },
+        ],
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify({ error: (error as Error).message }),
+            mimeType: "text/plain",
+          },
+        ],
+      };
+    }
+  },
+);
+
 
 // Start receiving messages on stdin and sending messages on stdout
 async function main() {

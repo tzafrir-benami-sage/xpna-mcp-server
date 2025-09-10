@@ -19,7 +19,7 @@ server.registerResource(
     description: "Get list of plans in the account",
     mimeType: "application/json",
   },
-  async (uri) => {
+  async (uri:{href:string}) => {
     try {
     const versions = await getSharedVersions();
     return {
@@ -52,7 +52,7 @@ server.registerResource(
     description: "Get list of users in the account",
     mimeType: "application/json",
   },
-  async (uri) => {
+  async (uri:{href:string}) => {
     try {
       const users = await getUsers();
       return {
@@ -86,7 +86,7 @@ server.registerResource(
     description: "Get list of SIF budgets in the account",
     mimeType: "application/json",
   },
-  async (uri) => {
+  async (uri:{href:string}) => {
     try {
       return {
         contents: [
@@ -118,7 +118,7 @@ server.registerTool(
     description: "Share a specific plan with a user",
     inputSchema: { userId: z.string().min(1), planId: z.string().min(1) },
   },
-  async ({ userId, planId }) => {
+  async ({ userId, planId }:{planId:string; userId:string}) => {
     await shareVersionWithUser(userId, planId);
     return {
       content: [{ 
@@ -137,7 +137,7 @@ server.registerTool(
     description: "Returns the URL of a specific plan to open in the browser",
     inputSchema: { planId: z.string().min(1) },
   },
-  async ({ planId }) => ({
+  async ({ planId }: {planId:string}) => ({
     content: [{
       type: "text",
       text: `https://latest.intacct-planning.com/plan/${planId}`,
@@ -157,7 +157,7 @@ server.registerTool(
       budgetKey: z.string().min(1)
     },
   },
-  async ({ name, description, budgetKey }) => {
+  async ({ name, description, budgetKey }: {name:string, description:string, budgetKey:string}) => {
     const jobId = await createPlanFromBudget({ name, description, budgetKey,  });
     return {
       content: [{

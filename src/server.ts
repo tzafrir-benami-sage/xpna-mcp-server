@@ -163,7 +163,7 @@ server.registerTool(
     return {
       content: [{
         type: "text",
-        text: `Initiated create plan form SIF budget ${budgetKey} with name ${name}. jobId to poll status: ${jobId}`,
+        text: `Initiated create plan form SIF budget ${budgetKey} with name ${name}. jobId: ${jobId}`,
         mimeType: "text/plain"
       }],
     };

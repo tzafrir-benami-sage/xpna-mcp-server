@@ -1,4 +1,5 @@
 import { dimensionsIds } from "./data.js";
+import type { CreatePlanBudgetRequestBody } from "./types.js";
 
 const xCompanyId = "N2NmZmMwMWMtOTdiMi00YmYxLWI3YjctZDU3Y2JjOTFhNzQy";
 const accessToken =
@@ -74,11 +75,11 @@ export const shareVersionWithUser = async (userId: string, versionId: string): P
 export const createPlanFromBudget = async ({
   budgetKey,
   name,
-  description,
+  description = '',
 }: {
   budgetKey: string;
   name: string;
-  description?: string;
+  description: string;
 }) => {
   const url = "https://api.intacct-planning.com/v1/create-plan-budget";
 
@@ -88,14 +89,14 @@ export const createPlanFromBudget = async ({
       Authorization: `Bearer ${accessToken}`,
       "x-xpna-company-id": xCompanyId,
     },
-    body: JSON.stringify({ name, description, budgetKey, dimensionsIds }),
+    body: JSON.stringify({ name, description, budgetKey, dimensionsIds } satisfies CreatePlanBudgetRequestBody),
     method: "POST",
   });
 
   if (!response.ok) {
     throw new Error(`Error creating plan from budget: ${response.statusText}`);
   }
-  const jobId = await response.json() as {jobId: string};
+  const jobId = (await response.json()) as { jobId: string };
 
   return jobId;
 };

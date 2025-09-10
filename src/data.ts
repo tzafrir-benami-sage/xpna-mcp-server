@@ -41,3 +41,5 @@ export const budgets: { key:string, id:string }[] = [
   }
 ]
 
+
+export const dimensionsIds = ['department', 'location', 'project', 'customer', 'vendor', 'item', 'class', 'nsp::channel', 'nsp::roeidim', 'nsp::UddTest1']

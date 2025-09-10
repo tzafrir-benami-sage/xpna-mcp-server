@@ -5,8 +5,36 @@ export type CreatePlanBudgetRequestBody = {
   dimensionsIds: string[];
 };
 
+export type AccountsStructure = { accounts: {
+    id: string;
+    name: string
+    href: string;
+    key: string;
+}[]; dimensions: string[] }
+
 export type CreatePlanActualsRequestBody = {
-  planData: Record<string, any>;
+  name: string;
+  description: string;
+  reportingPeriods: {
+    id: string;
+    name: string;
+    href: string;
+    key: string;
+  }[];
+  dimensionsIds: string[];
+  dimensionFilters: Record<string, string[]>;
+  accountsStructure: AccountsStructure[];
+  statisticalAccountsStructure: AccountsStructure[];
+  populateData: {
+  source: 'actuals' | 'budget';
+  reportingPeriods: {
+    id: string;
+    name: string;
+    href: string;
+    key: string;
+  }[];
+  periodsMap: Record<string, string>;
+}[];
 };
 
 export type JobStatus = { total: number; progress: number; error?: boolean };

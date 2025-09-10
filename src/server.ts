@@ -218,9 +218,9 @@ server.registerTool(
       planData: z.record(z.any()),
     },
   },
-  async ({ name, description }: {name:string, description:string}) => {
+  async () => {
     //planData comes for a fixture file
-    const jobId = await createPlanFromActuals({ planData });
+    const jobId = await createPlanFromActuals(planData);
     return {
       content: [
         {

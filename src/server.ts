@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { getSharedVersions, getUsers, shareVersionWithUser } from "./api.js";
+import {createPlanFromBudget, getSharedVersions, getUsers, shareVersionWithUser} from "./api.js";
 import {budgets} from "./data.js";
 
 // Create an MCP server
@@ -145,6 +145,30 @@ server.registerTool(
     }]
   })
 );
+
+server.registerTool(
+  "create-plan-from-budget",
+  {
+    title: "Create an xPnA plan from a SIF Budget",
+    description: "Create a new plan in xPnA based on a selected SIF Budget",
+    inputSchema: {
+      name: z.string().min(1) ,
+      description: z.string().min(1),
+      budgetKey: z.string().min(1)
+    },
+  },
+  async ({ name, description, budgetKey }) => {
+    const jobId = await createPlanFromBudget({ name, description, budgetKey,  });
+    return {
+      content: [{
+        type: "text",
+        text: `Initiated create plan form SIF budget ${budgetKey} with name ${name}. jobId to poll status: ${jobId.jobId}`,
+        mimeType: "text/plain"
+      }],
+    };
+  },
+);
+
 
 // Start receiving messages on stdin and sending messages on stdout
 async function main() {

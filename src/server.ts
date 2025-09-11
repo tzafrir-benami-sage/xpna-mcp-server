@@ -9,6 +9,7 @@ import {
   getUsers,
   shareVersionWithUser,
   getTest,
+  sortCompanyDimensions,
 } from "./api.js";
 import { budgets } from "./data.js";
 import { planData } from "./fixtures/actuals-selections.js";
@@ -252,6 +253,29 @@ server.registerTool(
           type: "text",
           text: `Initiated create plan form actuals. jobId to poll status: ${jobId}`,
           mimeType: "text/plain",
+        },
+      ],
+    };
+  },
+);
+
+server.registerTool(
+  "company/dimensions/order",
+  {
+    title: "Dimensions Order",
+    description: "Sort the dimensions order based on the given keys",
+    inputSchema: {
+      dimensionsOrder: z.array(z.string()).min(1),
+    },
+  },
+  async ({ dimensionsOrder }) => {
+    const res = await sortCompanyDimensions({ dimensionsOrder });
+    return {
+      content: [
+        {
+          type: "text",
+          text: JSON.stringify(res),
+          mimeType: "application/json",
         },
       ],
     };

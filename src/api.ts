@@ -117,6 +117,30 @@ export const createPlanFromActuals = async (
   return jobId;
 };
 
+export const sortCompanyDimensions = async (
+  dimsOrder: { dimensionsOrder: string[] }
+) => {
+  const url = "https://api.intacct-planning.com/v1/company/dimensions/order";
+
+  const response = await fetch(url, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+      "x-xpna-company-id": xCompanyId,
+    },
+    body: JSON.stringify({ dimensionsOrder: dimsOrder }),
+    method: "PATCH",
+  });
+
+  if (!response.ok) {
+    throw new Error(`new dimensions order is applied: ${response.statusText}`);
+  }
+  const { dimensionsOrderResult } = (await response.json()) as {
+    dimensionsOrderResult: Array<{ id: string; name: string; key: string; }>;
+  };
+  return dimensionsOrderResult;
+};
+
 export const getJobStatus = async (jobId: string) => {
   const url = `https://api.intacct-planning.com/v1/job/${jobId}`;
   const response = await fetch(url, {

@@ -238,7 +238,7 @@ server.registerTool(
   "create-plan-actuals",
   {
     title: "Create an xPnA plan from actuals",
-    description: "Create a new plan in xPnA based on actuals",
+    description: "Create a new plan in xPnA based on actuals, only 3 first accounts are selected",
     inputSchema: {
       name: z.string().min(1),
       description: z.string().min(1),
